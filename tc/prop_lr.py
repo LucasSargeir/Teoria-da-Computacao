@@ -117,3 +117,41 @@ def afd_produto(automato1, automato2):
     afd_produto = {set(afd_prod_estados), set(caracteres), afd_prod_dicio, string(afd_prod_estados[0]), set(afd_prod_final)}
 
     return afd_produto
+
+
+def print_table(table, QSet, d_symbol = 'd', i_symbol = 'i'):
+    states = list(QSet)
+    states.sort()
+
+    col_size = 5                                        # Define o tamanho padrao das colunas da tabela em caracteres
+    
+    for element in states:                              # Verifica se o tamanho padrao é menor do que o tamanho do maior
+        col_size = max(len(element), col_size)          # estado, e caso sim, define o novo tamanho da coluna
+
+    result = ''                                         
+
+    for index, value in enumerate(states[1:]):          # Itera os elementos a partir do segundo, linhas da tabela
+        
+        result += f'{value}'.ljust(col_size)            # Concatena o estado atual da tabela completando com espacos
+                                                        # a direita o tamanho da coluna
+        
+        for value2 in states[:index + 1]:               # Itera os elementos até o penultimo estado, colunas da tabela
+            result += '|'                               # adicionando os elementos no formato da tabela
+            result += f'{table[(value2, value)]}' \
+                    .rjust(col_size//2 + 1).ljust(col_size)
+
+        result += '|\n'
+
+    result +=''.ljust(col_size)                         # Insere espaços para mostrar os indices das colunas na direcao certa
+
+    for value in states[:-1]:                       
+        result += f'{value}'\
+            .rjust(col_size//2 + 2)\
+            .ljust(col_size + 1)                        # Mostra os indices das colunas
+
+    masked_result = result.replace(' d ', f' {d_symbol} '\
+                    .ljust(3))\
+                    .replace(' i ', f' {i_symbol} '\
+                    .ljust(3))                          # Mascara os marcadores de destinguinvel e indestinguinvel com os simbolos indicados
+
+    return masked_result
